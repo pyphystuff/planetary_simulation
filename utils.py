@@ -16,19 +16,19 @@ def update_position(distance, speed, time):
     y = distance*math.sin(angle)
     return x,y
 
+def plot_all_orbits(planets):
+    # Plot orbits for each planet
+    for planet in planets:
+        theta = [i * 0.01 for i in range(0, 628)]  # Generate angles from 0 to 2π
+        x = [planet.distance_from_star * math.cos(t) for t in theta]
+        y = [planet.distance_from_star * math.sin(t) for t in theta]
+        plt.plot(x, y, label=planet.name)  # Label for each planet
 
-def plot_orbit(distance):
-    # Generate data for the orbit (circle)
-    theta = [i * 0.01 for i in range(0, 628)]  # 0 to 2π in small steps
-    x = [distance * math.cos(t) for t in theta]
-    y = [distance * math.sin(t) for t in theta]
-    plt.plot(x, y, label=f"Orbit at {distance} km")
-    plt.title("Planetary Orbit Visualization")
+    # Customize the plot
+    plt.title("All Planetary Orbits")
     plt.xlabel("X Coordinate (km)")
     plt.ylabel("Y Coordinate (km)")
-    plt.legend()
-    plt.axis("equal")  # Keep aspect ratio
-    plt.grid()
-
-# Ensure to display the plot after all orbits are drawn
-    plt.show()
+    plt.axis("equal")  # Keep aspect ratio consistent
+    plt.legend()  # Show legend for planet names
+    plt.grid()  # Add grid for better visualization
+    plt.show() 
