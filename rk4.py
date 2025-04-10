@@ -1,29 +1,27 @@
-import math
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 
-##constants
-G = 6.67430e-11  # Gravitational constant
-steps = 5000
-dt= 0.01
-M_sun = 1.989e30
-#x, y = 1.0, 0.0  # Initial position (1 AU from the Sun)
-#vx, vy = 0.0, 1.0  # Initial velocity (circular orbit)
+# Physical Constants
+G = 6.67430e-11  # Gravitational constant (m³/kg/s²)
+M_sun = 1.989e30  # Mass of the Sun (kg)
+AU = 1.496e11  # 1 Astronomical Unit (m)
+year = 3.154e7  # 1 year in seconds
 
-def calculate_gravitational_force(m1, m2, distance):
-    if distance == 0:
-        return 0
-    return G * (m1 * m2) / (distance**2) 
+# Time step and duration
+dti = 24 * 3600  # 1 day in seconds
+stepsi = 365 * 5  # Simulate 5 years
 
-#acceltaration for rk4
+# Initial conditions for Earth
+xi, yi = AU, 0  # Start at 1 AU from the Sun
+#vxi, vyi = 0, 29780  # Earth's velocity in m/s (approximate circular orbit)
+vxi, vyi = 0, 29780
 
 def acceleration(x, y):
-    """Compute acceleration due to gravity."""
+    """Compute acceleration due to Sun's gravity."""
     r = np.sqrt(x**2 + y**2)
     ax = -G * M_sun * x / r**3
     ay = -G * M_sun * y / r**3
     return ax, ay
-
 
 # RK4 Method
 def rk4(x,y,vx,vy,dt,steps):    ##initial conditions
@@ -56,24 +54,24 @@ def rk4(x,y,vx,vy,dt,steps):    ##initial conditions
 
     return x_list,y_list
 
-##updating positions
-def plot_all_orbits(planets):
-    dti = 24 * 3600  # 1 day in seconds
-    stepsi = 365 * 200  # Simulate 5 years
-    for planet in planets:
-        # Convert km to m and km/s to m/s
-        distance_m = planet.distance_from_star * 1e3
-        velocity_m_s = planet.velocity * 1e3
-        x_list2, y_list2 = rk4(distance_m, 0.0, 0.0, velocity_m_s, dti, stepsi)
 
-        plt.plot(x_list2, y_list2, label=planet.name)
+#print(rk4(xi,yi,vxi,vyi,dti,stepsi))
 
-    plt.title("All Planetary Orbits")
-    plt.xlabel("X Coordinate (m)")
-    plt.ylabel("Y Coordinate (m)")
-    plt.axis("equal")
-    plt.legend()
-    plt.grid()
-    plt.show()
+x_list2,y_list2 = rk4(xi,yi,vxi,vyi,dti,stepsi)
+
+### definir objetos con velocidad y distancias reales
 
 
+
+
+# Plot the orbit
+plt.figure(figsize=(6,6))
+plt.plot(x_list2, y_list2, label="Earth's Orbit")
+plt.scatter(0, 0, color='orange', label="Sun", s=200)
+plt.xlabel("x [m]")
+plt.ylabel("y [m]")
+plt.title("Earth Orbiting the Sun using RK4")
+plt.legend()
+plt.grid()
+plt.axis("equal")
+plt.show()
